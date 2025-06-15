@@ -32,20 +32,69 @@ class Gameboard{
         return this.board[index].shipLocation
     }
 
-    checkValidity(startingIndex, ship){
-        let invalidCells = [9,19,29,39,49,59,69,79,89,99]
-        // find modulus that takes it under 10, if adding ship length goes over 9 then it is invalid position
+    checkValidity(startingIndex, ship, isHorizontal){
+        if(isHorizontal){
+            if((startingIndex % 10) + ship.length > 10){
+                return false
+            }
+            else{
+                for(let i = 0; i < ship.length; i++){
+                    if(this.board[startingIndex+i].shipLocation == true){
+                        return false
+                    }
+                }
+                return true
+            }
+        }
+        else if(!isHorizontal){
+            if(startingIndex + ((ship.length - 1) * 10) > 99){
+                return false
+            }
+            else{
+                for(let i = 0; i < ship.length; i++){
+                    if(this.board[startingIndex+(i*10)].shipLocation == true){
+                        return false
+                    }
+                }
+                return true
 
+            }
+        }
     }
 
-    placeShip(startingIndex, ship){
-        console.log(this.board[startingIndex].shipLocation)
+    placeShip(startingIndex, ship, shipID, isHorizontal){
+        if(isHorizontal){
+        for(let i = 0; i < ship.length; i++){
+            this.board[startingIndex+i].shipLocation = true
+            this.board[startingIndex+i].shipID = shipID
+        }
+        }
+        else{
+            for(let i = 0; i < ship.length; i++){
+                this.board[startingIndex+(i*10)].shipLocation = true
+                this.board[startingIndex+(i*10)].shipID = shipID
+            }
+        }
     }
 
     automaticPlacement(){
+        for(let ship in this.ships){
 
-    }
+            let valid = false
+            do{
+                let randomPosition = Math.floor(Math.random() * 100)
+                let randomAxis = Math.random() >= 0.5
+                if(this.checkValidity(randomPosition, this.ships[ship], randomAxis)){
+                    this.placeShip(randomPosition, this.ships[ship], ship, randomAxis)
+                    valid = true
+                }
+            }
+            while(!valid)
 
+
+            }
+        console.log(this.board)
+        }
 }
 
 module.exports = Gameboard
