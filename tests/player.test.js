@@ -6,6 +6,6 @@ let player = new Player("Test", true)
 
 describe("Testing player class", () =>{
     test("Testing", () =>{
-        console.log(player.gameboard)
+        console.log(player.gameboard.type)
     })
 })
